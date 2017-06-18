@@ -20,28 +20,26 @@ object MotionBlurSingleThread extends MotionBlurFactory {
   override def run(data: Seq[Seq[Int]], numberOfWorkers: Int):Future[Seq[Seq[Int]]] = {
     
     
-     var tempData : Float= 0
-     var count = 1
- 
-     
-	   implicit val executionContext = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(numberOfWorkers))
+	   implicit val executionContext = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(1))
 	
 	def calculo(): Seq[Seq[Int]]={
        
-    val R = for (i <- 0 to data.length - 1) yield {
-  for (j <- 0 to data(0).length - 1) yield {
+    val R = for (i <- 0 until data.length) yield {
+  for (j <- 0 until data(0).length) yield {
 
-    val tempList = List(Some(data(i)(j)), boundVer(i - 1, j), boundVer(i, j - 1), boundVer(i + 1, j)).flatten
-    math.ceil(tempList.sum / tempList.length).toInt
+    val tempList = List(Some(data(i)(j)), boundVer(i-1, j), boundVer(i+1, j), boundVer(i, j-1)).flatten
+   
+     math.ceil((tempList.sum).toDouble / (tempList.length).toDouble).toInt
+    
   }
 }
-  
+    
     return R
    }
    
     def boundVer(i:Int, j:Int): Option[Int] ={
       
-      if((i<0)|| (j<0) || (i>data.length-1))
+      if((i<0)|| (i>data.length-1) || (j<0))
         None
         
       else{

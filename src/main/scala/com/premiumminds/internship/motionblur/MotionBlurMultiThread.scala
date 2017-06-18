@@ -18,22 +18,17 @@ object MotionBlurMultiThread extends MotionBlurFactory {
     * @return matrix of integers
     */
   override def run(data: Seq[Seq[Int]], numberOfWorkers: Int):Future[Seq[Seq[Int]]] = {
-    
-    
-     var tempData : Float= 0
-     var count = 1
- 
-     
+   
+      
 	   implicit val executionContext = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(numberOfWorkers))
 	   
-	
 	def calculo(): Seq[Seq[Int]]={
        
    val R = (0 until data.length).par.map { i =>
   (0 until data(0).length).par.map { j =>
 
-    val tempList = List(Some(data(i)(j)), boundVer(i - 1, j), boundVer(i, j - 1), boundVer(i + 1, j)).flatten
-    math.ceil(tempList.sum / tempList.length).toInt
+    val tempList = List(Some(data(i)(j)), boundVer(i+1, j), boundVer(i, j-1), boundVer(i-1, j )).flatten
+     math.ceil((tempList.sum).toDouble / (tempList.length).toDouble).toInt
   }.seq
 }.seq
     return R
@@ -41,7 +36,7 @@ object MotionBlurMultiThread extends MotionBlurFactory {
    
     def boundVer(i:Int, j:Int): Option[Int] ={
       
-      if((i<0)|| (j<0) || (i>data.length-1))
+      if((i<0)|| (i>data.length-1) || (j<0))
         None
         
       else{

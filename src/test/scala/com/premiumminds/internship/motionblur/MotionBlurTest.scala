@@ -3,6 +3,7 @@ package com.premiumminds.internship.motionblur
 import org.scalatest.FunSuite
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
